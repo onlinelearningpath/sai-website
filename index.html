@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kuwait Classifieds Pro</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header>
+  <div class="top-bar">
+    <div class="logo">Kuwait<span>Classifieds</span></div>
+
+    <nav>
+      <a href="#home" data-en="Home" data-ar="الرئيسية">Home</a>
+      <a href="#ads" data-en="Ads" data-ar="الإعلانات">Ads</a>
+      <a href="#post" class="post-btn" data-en="Post Ad" data-ar="أضف إعلان">Post Ad</a>
+      <button id="favoritesBtn" onclick="toggleFavorites()">❤️ Favorites</button>
+      <button onclick="toggleDarkMode()">🌙</button>
+      <button onclick="toggleLanguage()" id="languageBtn">عربي</button>
+      <button onclick="openAuthModal()" id="authBtn">Login</button>
+    </nav>
+  </div>
+
+  <div class="category-bar" id="categoryBar"></div>
+</header>
+
+<section id="home" class="hero">
+  <h1 data-en="Buy, Sell, Rent & Find Jobs in Kuwait" data-ar="اشترِ وبِع واستأجر وابحث عن وظائف في الكويت">
+    Buy, Sell, Rent & Find Jobs in Kuwait
+  </h1>
+  <p data-en="Cars, jobs, property, phones, services and more in one marketplace."
+     data-ar="سيارات، وظائف، عقارات، هواتف، خدمات والمزيد في سوق واحد.">
+    Cars, jobs, property, phones, services and more in one marketplace.
+  </p>
+  <a href="#post" class="btn">Post Free Ad</a>
+</section>
+
+<section class="stats">
+  <div class="stat"><h3 id="totalAds">0</h3><p>Total Ads</p></div>
+  <div class="stat"><h3 id="featuredAds">0</h3><p>Featured</p></div>
+  <div class="stat"><h3 id="favoriteAds">0</h3><p>Favorites</p></div>
+  <div class="stat"><h3 id="userStatus">Guest</h3><p>Account</p></div>
+</section>
+
+<section class="filters">
+  <input id="searchInput" type="text" placeholder="Search ads..." />
+  <select id="categoryFilter"><option value="all">All Categories</option></select>
+
+  <select id="locationFilter">
+    <option value="all">All Kuwait</option>
+    <option>Kuwait City</option>
+    <option>Hawally</option>
+    <option>Salmiya</option>
+    <option>Farwaniya</option>
+    <option>Ahmadi</option>
+    <option>Jahra</option>
+  </select>
+
+  <input id="minPrice" type="number" placeholder="Min KWD" />
+  <input id="maxPrice" type="number" placeholder="Max KWD" />
+</section>
+
+<section id="ads" class="section">
+  <h2>Latest Advertisements</h2>
+  <div id="adsContainer" class="ads-grid"></div>
+</section>
+
+<section id="post" class="section">
+  <h2 id="formTitle">Post New Advertisement</h2>
+
+  <form id="adForm">
+    <input id="editId" type="hidden" />
+
+    <div class="form-row">
+      <input id="title" type="text" placeholder="Ad title" required />
+      <select id="category" required>
+        <option value="">Select Category</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <input id="price" type="number" placeholder="Price in KWD" required />
+      <select id="location" required>
+        <option value="">Select Location</option>
+        <option>Kuwait City</option>
+        <option>Hawally</option>
+        <option>Salmiya</option>
+        <option>Farwaniya</option>
+        <option>Ahmadi</option>
+        <option>Jahra</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <input id="phone" type="tel" placeholder="Phone number" required />
+      <input id="imageFile" type="file" accept="image/*" />
+    </div>
+
+    <label class="checkbox-label">
+      <input id="featured" type="checkbox" />
+      Featured Ad
+    </label>
+
+    <textarea id="description" placeholder="Description" required></textarea>
+
+    <button type="submit" class="btn" id="submitBtn">Add Advertisement</button>
+  </form>
+</section>
+
+<div id="authModal" class="modal">
+  <div class="modal-box">
+    <button class="close-btn" onclick="closeModal('authModal')">×</button>
+    <h2>Login / Register</h2>
+    <input id="authName" type="text" placeholder="Username" />
+    <input id="authPassword" type="password" placeholder="Password" />
+
+    <div class="modal-actions">
+      <button class="btn" onclick="registerUser()">Register</button>
+      <button class="btn blue" onclick="loginUser()">Login</button>
+    </div>
+
+    <p class="small-note">Test account: admin / 1234</p>
+  </div>
+</div>
+
+<div id="detailsModal" class="modal">
+  <div class="modal-box details-box">
+    <button class="close-btn" onclick="closeModal('detailsModal')">×</button>
+    <div id="detailsContent"></div>
+  </div>
+</div>
+
+<div class="chatbot">
+  <button class="chat-toggle" onclick="toggleChatbot()">🤖</button>
+
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <strong>AI Assistant</strong>
+      <button onclick="toggleChatbot()">×</button>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="bot-message">
+        Hi! I am your marketplace assistant. Ask me anything about ads, cars, jobs, posting, prices, login, favorites, or website help.
+      </div>
+    </div>
+
+    <div class="quick-replies">
+      <button onclick="quickChat('How can I post an ad?')">Post Ad</button>
+      <button onclick="quickChat('Show me cars')">Cars</button>
+      <button onclick="quickChat('How to contact seller?')">Contact</button>
+      <button onclick="quickChat('What is this website?')">Help</button>
+    </div>
+
+    <form class="chat-input" onsubmit="sendChatMessage(event)">
+      <input id="chatInput" type="text" placeholder="Ask anything..." />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<footer>
+  <p>© 2026 Kuwait Classifieds Pro. All rights reserved.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
